@@ -191,10 +191,10 @@ elseif ($Action -eq 'deploy') {
     "sed 's/`${OTEL_DOMAIN}/$OtelDomain/g; s/`${GRAFANA_DOMAIN}/$GrafanaDomain/g' /opt/claude-monitoring/nginx/nginx.conf | sudo tee /etc/nginx/conf.d/claude-monitoring.conf > /dev/null && sudo nginx -t && sudo systemctl reload nginx"
   if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-  # docker compose 起動
-  Write-Host '==> Starting containers...'
+  # docker compose 起動 + 設定変更を反映するため再起動
+  Write-Host '==> Starting and restarting containers...'
   ssh -i $KeyFile -o StrictHostKeyChecking=no -p $SshPort "ec2-user@$Ip" `
-    'cd /opt/claude-monitoring && docker compose up -d'
+    'cd /opt/claude-monitoring && docker compose up -d && docker compose restart'
   if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
   Write-Host ''

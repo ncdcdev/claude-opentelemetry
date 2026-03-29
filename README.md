@@ -2,7 +2,7 @@
 
 Claude Code の利用状況（コスト・トークン・セッション数）を OpenTelemetry で収集し、Grafana で可視化する自前の監視スタック。
 
-```
+```text
 Claude Code (local)
     │ OTLP over HTTPS
     ▼
@@ -13,8 +13,8 @@ grafana.<domain>──┘
                       ├── OTel Collector :4318 (Basic Auth)
                       └── Grafana :3000
                               │
-                          Prometheus :9090 (メトリクス、内部のみ)
-                          Loki :3100 (ログ、内部のみ)
+                          Prometheus :9090 (メトリクス)
+                          Loki :3100 (ログ)
 ```
 
 **収集データ**: メトリクス（コスト・トークン・セッション数）→ Prometheus、ログ（ツール呼び出し履歴）→ Loki
@@ -151,10 +151,13 @@ GF_SECURITY_ADMIN_PASSWORD=...   # Grafana 管理者パスワード
     "OTEL_EXPORTER_OTLP_HEADERS": "Authorization=Basic <base64(claude:<password>)>",
     "OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE": "cumulative",
     "OTEL_METRIC_EXPORT_INTERVAL": "10000",
-    "OTEL_LOGS_EXPORT_INTERVAL": "5000"
+    "OTEL_LOGS_EXPORT_INTERVAL": "5000",
+    "OTEL_LOG_TOOL_DETAILS": "1"
   }
 }
 ```
+
+`OTEL_LOG_TOOL_DETAILS=1` を設定するとツール呼び出しの入力引数（読んだファイルパス、WebFetchのURL等）もLokiに記録される。
 
 `Authorization` ヘッダーの値は次のコマンドで生成：
 
