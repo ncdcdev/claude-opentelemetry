@@ -13,8 +13,11 @@ grafana.<domain>──┘
                       ├── OTel Collector :4318 (Basic Auth)
                       └── Grafana :3000
                               │
-                          Prometheus :9090 (内部のみ)
+                          Prometheus :9090 (メトリクス、内部のみ)
+                          Loki :3100 (ログ、内部のみ)
 ```
+
+**収集データ**: メトリクス（コスト・トークン・セッション数）→ Prometheus、ログ（ツール呼び出し履歴）→ Loki
 
 **コスト**: 使用時のみ起動（~$3/月）
 
