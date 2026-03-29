@@ -1,0 +1,6 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+# Remote Write で受け取るだけなのでスクレイプ設定は最小限
+scrape_configs: []

@@ -1,0 +1,13 @@
+hosted_zone_id    = "Z0000000000000000000"   # Route53 ホストゾーン ID
+ssh_key_name      = "my-key"                  # EC2 キーペア名
+
+# SSH ポート設定
+# ssh_open = false  # true にすると SSH ポートが Security Group で開く
+# ssh_port = 2222   # SSH ポート番号
+
+# 以下はデフォルト値から変更する場合のみ記載
+# aws_region        = "ap-northeast-1"
+# project           = "claude-monitoring"
+# otel_subdomain    = "otel"
+# grafana_subdomain = "grafana"
+# instance_type     = "t3.micro"

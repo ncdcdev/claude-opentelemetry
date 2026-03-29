@@ -1,0 +1,14 @@
+# 秘密情報
+.env
+infra/terraform.tfvars
+infra/backend.tfbackend
+
+# Terraform
+infra/.terraform/
+infra/.terraform.lock.hcl
+infra/tfplan
+infra/*.tfstate
+infra/*.tfstate.backup
+
+# macOS
+.DS_Store

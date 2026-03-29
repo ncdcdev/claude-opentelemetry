@@ -1,0 +1,37 @@
+extensions:
+  basicauth/otlp:
+    htpasswd:
+      # htpasswd -nbB claude <password> で生成したハッシュを .env の OTEL_HTPASSWD に設定する
+      inline: "${env:OTEL_HTPASSWD}"
+
+receivers:
+  otlp:
+    protocols:
+      http:
+        auth:
+          authenticator: basicauth/otlp
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+    timeout: 10s
+
+exporters:
+  prometheusremotewrite:
+    endpoint: http://prometheus:9090/api/v1/write
+    tls:
+      insecure: true
+  debug:
+    verbosity: basic
+
+service:
+  extensions: [basicauth/otlp]
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [prometheusremotewrite, debug]
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [debug]
