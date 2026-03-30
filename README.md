@@ -173,6 +173,17 @@ GF_SECURITY_ADMIN_PASSWORD=...   # Grafana 管理者パスワード
 [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes("claude:<password>"))
 ```
 
+Claudeへ頼むと楽
+
+設定方法：Claudeへ以下のプロンプトを入力する
+
+```text
+以下のドキュメントを参照し、テレメトリの設定をしてください
+https://github.com/karuru6225/claude-opentelemetry/blob/main/claude-code-telemetry-setup.md
+エンドポイントは xxxxx
+パスワードは xxxx
+```
+
 ---
 
 ## SSH アクセス
