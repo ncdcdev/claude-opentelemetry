@@ -14,6 +14,9 @@ otlp:
     - service.name
     - service.namespace
     - service.version
+    - account_uuid
+    - organization_id
+    - user_email
 
 # スクレイプは使わず OTLP のみ
 scrape_configs: []

@@ -142,7 +142,13 @@ docker run --rm httpd htpasswd -nbB claude "<任意のパスワード>" > otel.h
 
 ## Claude Code の設定
 
-`~/.claude/settings.json` に追加：
+### 方法 A: サーバー管理設定（Team / Enterprise プラン推奨）
+
+Team または Enterprise プランでは、管理者が **Admin Console** で一度設定するだけでチーム全員に自動配布できます。メンバー側の作業は不要です。
+
+詳細: [サーバー管理設定による自動配布ガイド](docs/server-managed-settings.md)
+
+**Admin Console に登録する JSON:**
 
 ```json
 {
@@ -161,7 +167,9 @@ docker run --rm httpd htpasswd -nbB claude "<任意のパスワード>" > otel.h
 }
 ```
 
-`OTEL_LOG_TOOL_DETAILS=1` を設定するとツール呼び出しの入力引数（読んだファイルパス、WebFetchのURL等）もLokiに記録される。
+### 方法 B: 手動設定（個人・検証用）
+
+`~/.claude/settings.json` に直接追加します。詳細: [テレメトリ設定ガイド](claude-code-telemetry-setup.md)
 
 `Authorization` ヘッダーの値は次のコマンドで生成：
 
@@ -210,6 +218,19 @@ ssh -i $HOME\.ssh\claude-monitoring.pem -p 2222 ec2-user@<IP>
 | `.\manage.ps1 deploy -KeyFile <pem>` | 設定ファイル転送 + nginx 設定 + コンテナ起動 |
 
 すべてのコマンドに `-Profile <name>` を付けると AWS プロファイルを指定できる。
+
+---
+
+## ユーザー別ダッシュボード
+
+Grafana ダッシュボードにはチーム全体のサマリーに加え、**ユーザー別分析**セクションが含まれています。
+
+- **ユーザー選択ドロップダウン**: 特定のメンバーに絞り込んで全パネルを確認
+- **ユーザー別コスト / トークン / セッション数**: 横棒グラフで一覧比較
+- **ユーザー別コスト・トークン推移**: 時系列グラフ
+- **ユーザー別コード変更行数・アクティブ時間**: 作業量の可視化
+
+各ユーザーは `account_uuid` ラベルで識別されます。
 
 ---
 
