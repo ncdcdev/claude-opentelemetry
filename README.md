@@ -221,6 +221,19 @@ ssh -i $HOME\.ssh\claude-monitoring.pem -p 2222 ec2-user@<IP>
 
 ---
 
+## 監視スタックの選択
+
+| | EC2 セルフホスト（本ドキュメント） | Grafana Cloud |
+|---|---|---|
+| インフラ管理 | 必要（EC2/nginx/certbot） | **不要** |
+| コスト | ~$3/月 | **Free Tier あり** |
+| OTel Collector | 必要 | **不要** |
+| データ保持 | 90日（設定変更可） | 14日（Free）|
+
+**Grafana Cloud を使う場合**: [grafana-cloud/README.md](grafana-cloud/README.md) を参照してください。
+
+---
+
 ## ユーザー別ダッシュボード
 
 Grafana ダッシュボードにはチーム全体のサマリーに加え、**ユーザー別分析**セクションが含まれています。

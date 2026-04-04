@@ -146,8 +146,54 @@ npm update -g @anthropic-ai/claude-code
 
 ---
 
+---
+
+## Grafana Cloud を使う場合の設定
+
+EC2 セルフホスト構成の代わりに Grafana Cloud を使う場合、設定が大きく簡略化されます。
+
+### 違い
+
+| 項目 | EC2 セルフホスト | Grafana Cloud |
+|---|---|---|
+| エンドポイント | `https://otel.<your-domain>` | `https://otlp-gateway-<region>.grafana.net/otlp` |
+| 認証 | `Basic <base64(claude:password)>` | `Basic <base64(instanceId:apiKey)>` |
+| OTel Collector | 必要（EC2 上で運用） | **不要**（直接送信） |
+| htpasswd ファイル | 必要 | **不要** |
+
+### Grafana Cloud 用 Managed Settings JSON
+
+```json
+{
+  "env": {
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
+    "OTEL_METRICS_EXPORTER": "otlp",
+    "OTEL_LOGS_EXPORTER": "otlp",
+    "OTEL_EXPORTER_OTLP_PROTOCOL": "http/protobuf",
+    "OTEL_EXPORTER_OTLP_ENDPOINT": "https://otlp-gateway-prod-ap-southeast-1.grafana.net/otlp",
+    "OTEL_EXPORTER_OTLP_HEADERS": "Authorization=Basic <base64(instanceId:apiKey)>",
+    "OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE": "delta",
+    "OTEL_METRIC_EXPORT_INTERVAL": "10000",
+    "OTEL_LOGS_EXPORT_INTERVAL": "5000",
+    "OTEL_LOG_TOOL_DETAILS": "1"
+  }
+}
+```
+
+`instanceId` と `apiKey` は Grafana Cloud ポータルの **OpenTelemetry** タイルから取得します。
+Authorization ヘッダー値の生成:
+
+```bash
+echo -n "<instanceId>:<apiKey>" | base64
+```
+
+詳細: [Grafana Cloud セットアップガイド](../grafana-cloud/README.md)
+
+---
+
 ## 参考リンク
 
 - [Claude Code Managed Settings 公式ドキュメント](https://docs.anthropic.com/ja/claude-code/settings#managed-settings)
 - [Claude Code テレメトリ設定ガイド](../claude-code-telemetry-setup.md)
 - [監視スタック セットアップ README](../README.md)
+- [Grafana Cloud セットアップガイド](../grafana-cloud/README.md)
