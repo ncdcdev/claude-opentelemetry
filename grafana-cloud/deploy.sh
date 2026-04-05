@@ -9,12 +9,12 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DASHBOARD_FILE="$SCRIPT_DIR/dashboards/claude-code.json"
 
-: "${GRAFANA_CLOUD_URL:?GRAFANA_CLOUD_URL が未設定アル。例: https://your-org.grafana.net}"
-: "${GRAFANA_CLOUD_API_KEY:?GRAFANA_CLOUD_API_KEY が未設定アル}"
+: "${GRAFANA_CLOUD_URL:?GRAFANA_CLOUD_URL が未設定です。例: https://your-org.grafana.net}"
+: "${GRAFANA_CLOUD_API_KEY:?GRAFANA_CLOUD_API_KEY が未設定です}"
 
 GRAFANA_CLOUD_URL="${GRAFANA_CLOUD_URL%/}"
 
-echo "==> Grafana Cloud にダッシュボードをデプロイするアル..."
+echo "==> Grafana Cloud にダッシュボードをデプロイします..."
 echo "    URL: $GRAFANA_CLOUD_URL"
 
 PAYLOAD=$(jq -n \
@@ -29,10 +29,10 @@ HTTP_STATUS=$(curl -s -o /tmp/grafana-deploy-response.json -w "%{http_code}" \
 
 if [[ "$HTTP_STATUS" == "200" ]]; then
   DASHBOARD_URL=$(jq -r '.url' /tmp/grafana-deploy-response.json)
-  echo "==> デプロイ完了アル！"
+  echo "==> デプロイ完了！"
   echo "    ダッシュボード: ${GRAFANA_CLOUD_URL}${DASHBOARD_URL}"
 else
-  echo "==> デプロイ失敗アル (HTTP $HTTP_STATUS)"
+  echo "==> デプロイ失敗 (HTTP $HTTP_STATUS)"
   cat /tmp/grafana-deploy-response.json
   exit 1
 fi
