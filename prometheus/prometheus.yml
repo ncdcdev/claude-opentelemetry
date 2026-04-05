@@ -14,7 +14,7 @@ otlp:
     - service.name
     - service.namespace
     - service.version
-    - account_uuid
+    - user_account_uuid
     - organization_id
     - user_email
 
