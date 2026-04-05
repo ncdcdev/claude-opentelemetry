@@ -352,7 +352,7 @@
     {
       "id": 21,
       "title": "ユーザー別コスト (USD)",
-      "type": "bargauge",
+      "type": "table",
       "gridPos": {
         "x": 0,
         "y": 29,
@@ -365,46 +365,55 @@
       },
       "fieldConfig": {
         "defaults": {
-          "unit": "currencyUSD",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 10
-              },
-              {
-                "color": "red",
-                "value": 50
-              }
-            ]
-          }
-        }
+          "unit": "currencyUSD"
+        },
+        "overrides": []
       },
       "options": {
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        },
-        "displayMode": "gradient"
+        "sortBy": []
       },
       "targets": [
         {
           "expr": "sum by (user_email) (increase(claude_code_cost_usage_USD_total{user_email=~\"$user\"}[$__range]))",
-          "legendFormat": "{{user_email}}"
+          "legendFormat": "{{user_email}}",
+          "instant": true,
+          "format": "table",
+          "range": false
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true
+            },
+            "renameByName": {
+              "user_email": "ユーザー",
+              "terminal_type": "ターミナル",
+              "Value": "コスト (USD)",
+              "Value #A": "コスト (USD)"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": [
+              {
+                "desc": true,
+                "displayName": "コスト (USD)"
+              }
+            ]
+          }
         }
       ]
     },
     {
       "id": 22,
       "title": "ユーザー別トークン消費量",
-      "type": "bargauge",
+      "type": "table",
       "gridPos": {
         "x": 8,
         "y": 29,
@@ -417,45 +426,55 @@
       },
       "fieldConfig": {
         "defaults": {
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 100000
-              },
-              {
-                "color": "red",
-                "value": 500000
-              }
-            ]
-          }
-        }
+          "unit": "short"
+        },
+        "overrides": []
       },
       "options": {
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        },
-        "displayMode": "gradient"
+        "sortBy": []
       },
       "targets": [
         {
           "expr": "sum by (user_email) (increase(claude_code_token_usage_tokens_total{user_email=~\"$user\"}[$__range]))",
-          "legendFormat": "{{user_email}}"
+          "legendFormat": "{{user_email}}",
+          "instant": true,
+          "format": "table",
+          "range": false
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true
+            },
+            "renameByName": {
+              "user_email": "ユーザー",
+              "terminal_type": "ターミナル",
+              "Value": "トークン数",
+              "Value #A": "トークン数"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": [
+              {
+                "desc": true,
+                "displayName": "トークン数"
+              }
+            ]
+          }
         }
       ]
     },
     {
       "id": 23,
       "title": "ユーザー別セッション数",
-      "type": "bargauge",
+      "type": "table",
       "gridPos": {
         "x": 16,
         "y": 29,
@@ -468,38 +487,48 @@
       },
       "fieldConfig": {
         "defaults": {
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 20
-              },
-              {
-                "color": "red",
-                "value": 100
-              }
-            ]
-          }
-        }
+          "unit": "short"
+        },
+        "overrides": []
       },
       "options": {
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        },
-        "displayMode": "gradient"
+        "sortBy": []
       },
       "targets": [
         {
           "expr": "sum by (user_email) (last_over_time(claude_code_session_count_total{user_email=~\"$user\"}[$__range]))",
-          "legendFormat": "{{user_email}}"
+          "legendFormat": "{{user_email}}",
+          "instant": true,
+          "format": "table",
+          "range": false
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true
+            },
+            "renameByName": {
+              "user_email": "ユーザー",
+              "terminal_type": "ターミナル",
+              "Value": "セッション数",
+              "Value #A": "セッション数"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": [
+              {
+                "desc": true,
+                "displayName": "セッション数"
+              }
+            ]
+          }
         }
       ]
     },
@@ -566,7 +595,7 @@
     {
       "id": 26,
       "title": "ユーザー別コード変更行数",
-      "type": "bargauge",
+      "type": "table",
       "gridPos": {
         "x": 0,
         "y": 45,
@@ -579,45 +608,55 @@
       },
       "fieldConfig": {
         "defaults": {
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 500
-              },
-              {
-                "color": "red",
-                "value": 2000
-              }
-            ]
-          }
-        }
+          "unit": "short"
+        },
+        "overrides": []
       },
       "options": {
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        },
-        "displayMode": "gradient"
+        "sortBy": []
       },
       "targets": [
         {
           "expr": "sum by (user_email) (increase(claude_code_lines_of_code_count_total{user_email=~\"$user\"}[$__range]))",
-          "legendFormat": "{{user_email}}"
+          "legendFormat": "{{user_email}}",
+          "instant": true,
+          "format": "table",
+          "range": false
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true
+            },
+            "renameByName": {
+              "user_email": "ユーザー",
+              "terminal_type": "ターミナル",
+              "Value": "コード変更行数",
+              "Value #A": "コード変更行数"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": [
+              {
+                "desc": true,
+                "displayName": "コード変更行数"
+              }
+            ]
+          }
         }
       ]
     },
     {
-      "id": 27,
-      "title": "terminal_type 別セッション数",
-      "type": "bargauge",
+      "id": 30,
+      "type": "table",
+      "title": "ユーザー別ターミナルタイプ使用状況",
       "gridPos": {
         "x": 12,
         "y": 45,
@@ -630,73 +669,51 @@
       },
       "fieldConfig": {
         "defaults": {
-          "unit": "m",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "sortBy": []
+      },
+      "targets": [
+        {
+          "expr": "sum by (user_email, terminal_type) (last_over_time(claude_code_session_count_total{user_email=~\"$user\"}[$__range]))",
+          "legendFormat": "{{user_email}} / {{terminal_type}}",
+          "refId": "A",
+          "instant": true,
+          "format": "table",
+          "range": false
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true
+            },
+            "renameByName": {
+              "user_email": "ユーザー",
+              "terminal_type": "ターミナル",
+              "Value": "セッション数",
+              "Value #A": "セッション数"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": [
               {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 60
-              },
-              {
-                "color": "red",
-                "value": 300
+                "desc": true,
+                "displayName": "セッション数"
               }
             ]
           }
         }
-      },
-      "options": {
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        },
-        "displayMode": "gradient"
-      },
-      "targets": [
-        {
-          "expr": "sum by (terminal_type) (last_over_time(claude_code_session_count_total{user_email=~\"$user\"}[$__range]))",
-          "legendFormat": "{{terminal_type}}"
-        }
       ]
-    },
-    {
-      "type": "barchart",
-      "title": "terminal_type 別トークン消費量",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_METRICS}"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 53
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_METRICS}"
-          },
-          "expr": "sum by (terminal_type) (last_over_time(claude_code_token_usage_tokens_total{user_email=~\"$user\"}[$__range]))",
-          "legendFormat": "{{terminal_type}}",
-          "refId": "A"
-        }
-      ],
-      "options": {
-        "orientation": "auto"
-      },
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      }
     }
   ]
 }
