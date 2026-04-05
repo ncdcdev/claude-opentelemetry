@@ -2,9 +2,26 @@
   "title": "Claude Code 監視",
   "uid": "claude-code-monitoring",
   "schemaVersion": 38,
-  "version": 1,
+  "version": 2,
   "refresh": "30s",
   "time": { "from": "now-24h", "to": "now" },
+  "templating": {
+    "list": [
+      {
+        "name": "user",
+        "label": "ユーザー",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "query": "label_values(claude_code_cost_usage_USD_total, user_email)",
+        "refresh": 2,
+        "sort": 1,
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": true,
+        "current": { "text": "All", "value": "$__all" }
+      }
+    ]
+  },
   "panels": [
     {
       "id": 1,
@@ -21,7 +38,7 @@
       },
       "targets": [
         {
-          "expr": "sum(increase(claude_code_cost_usage_USD_total[$__range]))",
+          "expr": "sum(increase(claude_code_cost_usage_USD_total{user_account_uuid=~\"$user\"}[$__range]))",
           "legendFormat": "累計コスト"
         }
       ]
@@ -39,7 +56,7 @@
       },
       "targets": [
         {
-          "expr": "sum(increase(claude_code_token_usage_tokens_total[$__range]))",
+          "expr": "sum(increase(claude_code_token_usage_tokens_total{user_account_uuid=~\"$user\"}[$__range]))",
           "legendFormat": "累計トークン"
         }
       ]
@@ -57,7 +74,7 @@
       },
       "targets": [
         {
-          "expr": "count(count_over_time(claude_code_session_count_total[$__range]) > 0)",
+          "expr": "count(count_over_time(claude_code_session_count_total{user_account_uuid=~\"$user\"}[$__range]) > 0)",
           "legendFormat": "セッション数"
         }
       ]
@@ -75,7 +92,7 @@
       },
       "targets": [
         {
-          "expr": "sum(increase(claude_code_lines_of_code_count_total[$__range]))",
+          "expr": "sum(increase(claude_code_lines_of_code_count_total{user_account_uuid=~\"$user\"}[$__range]))",
           "legendFormat": "変更行数"
         }
       ]
@@ -95,7 +112,7 @@
       "options": { "tooltip": { "mode": "multi" } },
       "targets": [
         {
-          "expr": "sum by (model) (increase(claude_code_cost_usage_USD_total[1h]))",
+          "expr": "sum by (model) (increase(claude_code_cost_usage_USD_total{user_account_uuid=~\"$user\"}[1h]))",
           "legendFormat": "{{model}}"
         }
       ]
@@ -109,7 +126,7 @@
       "options": { "tooltip": { "mode": "multi" } },
       "targets": [
         {
-          "expr": "sum by (type) (increase(claude_code_token_usage_tokens_total[1h]))",
+          "expr": "sum by (type) (increase(claude_code_token_usage_tokens_total{user_account_uuid=~\"$user\"}[1h]))",
           "legendFormat": "{{type}}"
         }
       ]
@@ -123,7 +140,7 @@
       "options": { "pieType": "donut" },
       "targets": [
         {
-          "expr": "sum by (model) (increase(claude_code_cost_usage_USD_total[$__range]))",
+          "expr": "sum by (model) (increase(claude_code_cost_usage_USD_total{user_account_uuid=~\"$user\"}[$__range]))",
           "legendFormat": "{{model}}"
         }
       ]
@@ -136,7 +153,7 @@
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [
         {
-          "expr": "count(count_over_time(claude_code_session_count_total[1d]) > 0)",
+          "expr": "count(count_over_time(claude_code_session_count_total{user_account_uuid=~\"$user\"}[1d]) > 0)",
           "legendFormat": "セッション数/日"
         }
       ]
@@ -156,7 +173,7 @@
       "options": { "tooltip": { "mode": "multi" } },
       "targets": [
         {
-          "expr": "sum(claude_code_cost_usage_USD_total)",
+          "expr": "sum(claude_code_cost_usage_USD_total{user_account_uuid=~\"$user\"})",
           "legendFormat": "累計コスト"
         }
       ]
@@ -170,11 +187,203 @@
       "options": { "tooltip": { "mode": "multi" } },
       "targets": [
         {
-          "expr": "sum by (type) (claude_code_token_usage_tokens_total)",
+          "expr": "sum by (type) (claude_code_token_usage_tokens_total{user_account_uuid=~\"$user\"})",
           "legendFormat": "{{type}}"
         }
       ]
+    },
+    {
+      "id": 20,
+      "title": "ユーザー別分析",
+      "type": "row",
+      "gridPos": { "x": 0, "y": 28, "w": 24, "h": 1 },
+      "collapsed": false
+    },
+    {
+      "id": 21,
+      "title": "ユーザー別コスト (USD)",
+      "type": "bargauge",
+      "gridPos": { "x": 0, "y": 29, "w": 8, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 10 },
+              { "color": "red", "value": 50 }
+            ]
+          }
+        }
+      },
+      "options": {
+        "orientation": "horizontal",
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "displayMode": "gradient"
+      },
+      "targets": [
+        {
+          "expr": "sum by (user_email) (increase(claude_code_cost_usage_USD_total{user_account_uuid=~\"$user\"}[$__range]))",
+          "legendFormat": "{{user_email}}"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "title": "ユーザー別トークン消費量",
+      "type": "bargauge",
+      "gridPos": { "x": 8, "y": 29, "w": 8, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 100000 },
+              { "color": "red", "value": 500000 }
+            ]
+          }
+        }
+      },
+      "options": {
+        "orientation": "horizontal",
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "displayMode": "gradient"
+      },
+      "targets": [
+        {
+          "expr": "sum by (user_email) (increase(claude_code_token_usage_tokens_total{user_account_uuid=~\"$user\"}[$__range]))",
+          "legendFormat": "{{user_email}}"
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "title": "ユーザー別セッション数",
+      "type": "bargauge",
+      "gridPos": { "x": 16, "y": 29, "w": 8, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 20 },
+              { "color": "red", "value": 100 }
+            ]
+          }
+        }
+      },
+      "options": {
+        "orientation": "horizontal",
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "displayMode": "gradient"
+      },
+      "targets": [
+        {
+          "expr": "sum by (user_email) (increase(claude_code_session_count_total{user_account_uuid=~\"$user\"}[$__range]))",
+          "legendFormat": "{{user_email}}"
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "title": "ユーザー別コスト推移（1時間ごと）",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 37, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "custom": { "lineWidth": 2 }
+        }
+      },
+      "options": { "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "expr": "sum by (user_email) (increase(claude_code_cost_usage_USD_total{user_account_uuid=~\"$user\"}[1h]))",
+          "legendFormat": "{{user_email}}"
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "title": "ユーザー別トークン推移（1時間ごと）",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 37, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "options": { "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "expr": "sum by (user_email) (increase(claude_code_token_usage_tokens_total{user_account_uuid=~\"$user\"}[1h]))",
+          "legendFormat": "{{user_email}}"
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "title": "ユーザー別コード変更行数",
+      "type": "bargauge",
+      "gridPos": { "x": 0, "y": 45, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 500 },
+              { "color": "red", "value": 2000 }
+            ]
+          }
+        }
+      },
+      "options": {
+        "orientation": "horizontal",
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "displayMode": "gradient"
+      },
+      "targets": [
+        {
+          "expr": "sum by (user_email) (increase(claude_code_lines_of_code_count_total{user_account_uuid=~\"$user\"}[$__range]))",
+          "legendFormat": "{{user_email}}"
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "title": "ユーザー別アクティブ時間（分）",
+      "type": "bargauge",
+      "gridPos": { "x": 12, "y": 45, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "m",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 60 },
+              { "color": "red", "value": 300 }
+            ]
+          }
+        }
+      },
+      "options": {
+        "orientation": "horizontal",
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "displayMode": "gradient"
+      },
+      "targets": [
+        {
+          "expr": "sum by (user_email) (increase(claude_code_active_time_total_seconds_total{user_account_uuid=~\"$user\"}[$__range])) / 60",
+          "legendFormat": "{{user_email}}"
+        }
+      ]
     }
-  ],
-  "templating": { "list": [] }
+  ]
 }
