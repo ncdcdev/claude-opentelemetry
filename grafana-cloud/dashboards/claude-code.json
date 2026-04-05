@@ -137,7 +137,7 @@
       },
       "targets": [
         {
-          "expr": "count(count_over_time(claude_code_session_count_total{user_email=~\"$user\"}[$__range]) > 0)",
+          "expr": "count(last_over_time(claude_code_session_count_total{user_email=~\"$user\"}[$__range]))",
           "legendFormat": "セッション数"
         }
       ]
@@ -272,7 +272,7 @@
       },
       "targets": [
         {
-          "expr": "count(count_over_time(claude_code_session_count_total{user_email=~\"$user\"}[1d]) > 0)",
+          "expr": "count(last_over_time(claude_code_session_count_total{user_email=~\"$user\"}[1d]))",
           "legendFormat": "セッション数/日"
         }
       ]
@@ -498,7 +498,7 @@
       },
       "targets": [
         {
-          "expr": "sum by (user_email) (increase(claude_code_session_count_total{user_email=~\"$user\"}[$__range]))",
+          "expr": "sum by (user_email) (last_over_time(claude_code_session_count_total{user_email=~\"$user\"}[$__range]))",
           "legendFormat": "{{user_email}}"
         }
       ]
@@ -616,7 +616,7 @@
     },
     {
       "id": 27,
-      "title": "ユーザー別アクティブ時間（分）",
+      "title": "terminal_type 別セッション数",
       "type": "bargauge",
       "gridPos": {
         "x": 12,
@@ -661,10 +661,42 @@
       },
       "targets": [
         {
-          "expr": "sum by (user_email) (increase(claude_code_active_time_total_seconds_total{user_email=~\"$user\"}[$__range])) / 60",
-          "legendFormat": "{{user_email}}"
+          "expr": "sum by (terminal_type) (last_over_time(claude_code_session_count_total{user_email=~\"$user\"}[$__range]))",
+          "legendFormat": "{{terminal_type}}"
         }
       ]
+    },
+    {
+      "type": "barchart",
+      "title": "terminal_type 別トークン消費量",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_METRICS}"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 53
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_METRICS}"
+          },
+          "expr": "sum by (terminal_type) (last_over_time(claude_code_token_usage_tokens_total{user_email=~\"$user\"}[$__range]))",
+          "legendFormat": "{{terminal_type}}",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "orientation": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      }
     }
   ]
 }
