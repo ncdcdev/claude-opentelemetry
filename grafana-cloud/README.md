@@ -85,6 +85,15 @@ export GRAFANA_CLOUD_API_KEY=glsa_xxxxxxxxxxxx  # Grafana Cloud の Service Acco
 
 Service Account Token の作成: Grafana Cloud → Administration → Service accounts → Add service account token
 
+スクリプトは自動で Prometheus データソースの UID を検索しますが、Grafana Cloud の組み込みデータソース (`grafanacloud-<org>-prom`) は `/api/datasources` に返ってこない場合があります。その場合は UID を直接指定してください：
+
+```bash
+# Connections → Data sources → grafanacloud-<org>-prom の編集画面 URL末尾が UID
+# 例: https://your-org.grafana.net/connections/datasources/edit/grafanacloud-prom
+export GRAFANA_METRICS_DS_UID=grafanacloud-prom
+./grafana-cloud/deploy.sh
+```
+
 #### 方法B: Grafana UI から手動インポート
 
 1. Grafana Cloud の Grafana にログイン
