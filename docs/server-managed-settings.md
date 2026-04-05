@@ -101,9 +101,9 @@ Managed Settings で配布した設定でテレメトリを有効化すると、
 
 | ラベル | 内容 |
 |---|---|
+| `user_email` | アカウントのメールアドレス |
 | `user_account_uuid` | Anthropicアカウントの UUID |
 | `organization_id` | 組織の ID |
-| `user_email` | アカウントのメールアドレス |
 | `session_id` | CLI セッションの ID |
 | `model` | 使用したモデル名 |
 
@@ -136,9 +136,9 @@ Prometheus にデータが届いているか確認するには、Grafana の Exp
 {__name__=~"claude_code.*"}
 ```
 
-### `user_account_uuid` ラベルが空
+### `user_email` ラベルが空
 
-Claude Code がバージョン古い場合、`user_account_uuid` を送信しない可能性があります。最新バージョンに更新してください：
+Claude Code がバージョン古い場合、`user_email` を送信しない可能性があります。最新バージョンに更新してください：
 
 ```bash
 npm update -g @anthropic-ai/claude-code

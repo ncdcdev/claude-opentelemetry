@@ -12,7 +12,7 @@
         "label": "ユーザー",
         "type": "query",
         "datasource": { "type": "prometheus", "uid": "prometheus" },
-        "query": "label_values(claude_code_cost_usage_USD_total, user_account_uuid)",
+        "query": "label_values(claude_code_cost_usage_USD_total, user_email)",
         "refresh": 2,
         "sort": 1,
         "includeAll": true,
@@ -225,8 +225,8 @@
       },
       "targets": [
         {
-          "expr": "sum by (user_account_uuid) (increase(claude_code_cost_usage_USD_total{user_account_uuid=~\"$user\"}[$__range]))",
-          "legendFormat": "{{user_account_uuid}}"
+          "expr": "sum by (user_email) (increase(claude_code_cost_usage_USD_total{user_account_uuid=~\"$user\"}[$__range]))",
+          "legendFormat": "{{user_email}}"
         }
       ]
     },
@@ -255,8 +255,8 @@
       },
       "targets": [
         {
-          "expr": "sum by (user_account_uuid) (increase(claude_code_token_usage_tokens_total{user_account_uuid=~\"$user\"}[$__range]))",
-          "legendFormat": "{{user_account_uuid}}"
+          "expr": "sum by (user_email) (increase(claude_code_token_usage_tokens_total{user_account_uuid=~\"$user\"}[$__range]))",
+          "legendFormat": "{{user_email}}"
         }
       ]
     },
@@ -285,8 +285,8 @@
       },
       "targets": [
         {
-          "expr": "sum by (user_account_uuid) (increase(claude_code_session_count_total{user_account_uuid=~\"$user\"}[$__range]))",
-          "legendFormat": "{{user_account_uuid}}"
+          "expr": "sum by (user_email) (increase(claude_code_session_count_total{user_account_uuid=~\"$user\"}[$__range]))",
+          "legendFormat": "{{user_email}}"
         }
       ]
     },
@@ -305,8 +305,8 @@
       "options": { "tooltip": { "mode": "multi" } },
       "targets": [
         {
-          "expr": "sum by (user_account_uuid) (increase(claude_code_cost_usage_USD_total{user_account_uuid=~\"$user\"}[1h]))",
-          "legendFormat": "{{user_account_uuid}}"
+          "expr": "sum by (user_email) (increase(claude_code_cost_usage_USD_total{user_account_uuid=~\"$user\"}[1h]))",
+          "legendFormat": "{{user_email}}"
         }
       ]
     },
@@ -319,8 +319,8 @@
       "options": { "tooltip": { "mode": "multi" } },
       "targets": [
         {
-          "expr": "sum by (user_account_uuid) (increase(claude_code_token_usage_tokens_total{user_account_uuid=~\"$user\"}[1h]))",
-          "legendFormat": "{{user_account_uuid}}"
+          "expr": "sum by (user_email) (increase(claude_code_token_usage_tokens_total{user_account_uuid=~\"$user\"}[1h]))",
+          "legendFormat": "{{user_email}}"
         }
       ]
     },
@@ -349,8 +349,8 @@
       },
       "targets": [
         {
-          "expr": "sum by (user_account_uuid) (increase(claude_code_lines_of_code_count_total{user_account_uuid=~\"$user\"}[$__range]))",
-          "legendFormat": "{{user_account_uuid}}"
+          "expr": "sum by (user_email) (increase(claude_code_lines_of_code_count_total{user_account_uuid=~\"$user\"}[$__range]))",
+          "legendFormat": "{{user_email}}"
         }
       ]
     },
@@ -380,8 +380,8 @@
       },
       "targets": [
         {
-          "expr": "sum by (user_account_uuid) (increase(claude_code_active_time_total_seconds_total{user_account_uuid=~\"$user\"}[$__range])) / 60",
-          "legendFormat": "{{user_account_uuid}}"
+          "expr": "sum by (user_email) (increase(claude_code_active_time_total_seconds_total{user_account_uuid=~\"$user\"}[$__range])) / 60",
+          "legendFormat": "{{user_email}}"
         }
       ]
     }
