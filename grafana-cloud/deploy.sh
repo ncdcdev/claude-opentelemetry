@@ -1,13 +1,21 @@
 #!/usr/bin/env bash
 # Grafana Cloud にダッシュボードをデプロイするスクリプト
 # 使い方:
-#   export GRAFANA_CLOUD_URL=https://your-org.grafana.net
-#   export GRAFANA_CLOUD_API_KEY=glsa_xxxxxxxxxxxx
-#   ./grafana-cloud/deploy.sh
+#   1. リポジトリ直下の .env に GRAFANA_CLOUD_URL と GRAFANA_CLOUD_API_KEY を設定
+#   2. ./grafana-cloud/deploy.sh を実行
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DASHBOARD_FILE="$SCRIPT_DIR/dashboards/claude-code.json"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+DASHBOARDS_DIR="$SCRIPT_DIR/dashboards"
+
+# .env ファイルから環境変数を読み込み（未設定の場合のみ）
+if [[ -f "$REPO_ROOT/.env" ]]; then
+  echo "==> .env ファイルを読み込んでいます..."
+  set -a
+  source "$REPO_ROOT/.env"
+  set +a
+fi
 
 : "${GRAFANA_CLOUD_URL:?GRAFANA_CLOUD_URL が未設定です。例: https://your-org.grafana.net}"
 : "${GRAFANA_CLOUD_API_KEY:?GRAFANA_CLOUD_API_KEY が未設定です}"
@@ -50,29 +58,44 @@ else
   echo "    データソース: $MIMIR_NAME (uid: $MIMIR_UID)"
 fi
 
-# __inputs を解決して /api/dashboards/import でインポート
-PAYLOAD=$(jq -n \
-  --argjson dashboard "$(cat "$DASHBOARD_FILE")" \
-  --arg uid "$MIMIR_UID" \
-  '{
-    dashboard: $dashboard,
-    overwrite: true,
-    folderId: 0,
-    inputs: [{ name: "DS_METRICS", type: "datasource", pluginId: "prometheus", value: $uid }]
-  }')
+# dashboards ディレクトリ内の全 JSON をデプロイ
+DEPLOYED=0
+FAILED=0
+for DASHBOARD_FILE in "$DASHBOARDS_DIR"/*.json; do
+  [[ -f "$DASHBOARD_FILE" ]] || continue
+  DASHBOARD_NAME=$(basename "$DASHBOARD_FILE")
+  echo ""
+  echo "==> デプロイ中: $DASHBOARD_NAME"
 
-HTTP_STATUS=$(curl -s -o /tmp/grafana-deploy-response.json -w "%{http_code}" \
-  -X POST "$GRAFANA_CLOUD_URL/api/dashboards/import" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $GRAFANA_CLOUD_API_KEY" \
-  -d "$PAYLOAD")
+  PAYLOAD=$(jq -n \
+    --argjson dashboard "$(cat "$DASHBOARD_FILE")" \
+    --arg uid "$MIMIR_UID" \
+    '{
+      dashboard: $dashboard,
+      overwrite: true,
+      folderId: 0,
+      inputs: [{ name: "DS_METRICS", type: "datasource", pluginId: "prometheus", value: $uid }]
+    }')
 
-if [[ "$HTTP_STATUS" == "200" ]]; then
-  DASHBOARD_URL=$(jq -r '.importedUrl' /tmp/grafana-deploy-response.json)
-  echo "==> デプロイ完了！"
-  echo "    ダッシュボード: ${GRAFANA_CLOUD_URL}${DASHBOARD_URL}"
-else
-  echo "==> デプロイ失敗 (HTTP $HTTP_STATUS)"
-  cat /tmp/grafana-deploy-response.json
+  HTTP_STATUS=$(curl -s -o /tmp/grafana-deploy-response.json -w "%{http_code}" \
+    -X POST "$GRAFANA_CLOUD_URL/api/dashboards/import" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $GRAFANA_CLOUD_API_KEY" \
+    -d "$PAYLOAD")
+
+  if [[ "$HTTP_STATUS" == "200" ]]; then
+    DASHBOARD_URL=$(jq -r '.importedUrl' /tmp/grafana-deploy-response.json)
+    echo "    完了: ${GRAFANA_CLOUD_URL}${DASHBOARD_URL}"
+    DEPLOYED=$((DEPLOYED + 1))
+  else
+    echo "    失敗 (HTTP $HTTP_STATUS)"
+    cat /tmp/grafana-deploy-response.json
+    FAILED=$((FAILED + 1))
+  fi
+done
+
+echo ""
+echo "==> デプロイ結果: 成功 $DEPLOYED 件 / 失敗 $FAILED 件"
+if [[ "$FAILED" -gt 0 ]]; then
   exit 1
 fi

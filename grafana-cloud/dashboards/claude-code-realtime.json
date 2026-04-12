@@ -1,0 +1,308 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_METRICS",
+      "label": "Metrics (Mimir/Prometheus)",
+      "description": "Grafana Cloud Mimir または Prometheus データソース",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
+  "__requires": [
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    }
+  ],
+  "title": "Claude Code 監視（準リアルタイム）",
+  "uid": "claude-code-realtime",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "2m",
+  "time": {
+    "from": "now-3h",
+    "to": "now"
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "user",
+        "label": "ユーザー",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_METRICS}"
+        },
+        "query": "label_values(claude_code_cost_usage_USD_total, user_email)",
+        "refresh": 2,
+        "sort": 1,
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": true,
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        }
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 31,
+      "title": "アクティブユーザー数（直近1時間）",
+      "type": "stat",
+      "gridPos": { "x": 0, "y": 0, "w": 8, "h": 4 },
+      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "count(sum by (user_email) (rate(claude_code_cost_usage_USD_total{user_email=~\"$user\"}[1h])) > 0)",
+          "legendFormat": "アクティブユーザー"
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "title": "コストレート（直近1時間）",
+      "type": "stat",
+      "gridPos": { "x": 8, "y": 0, "w": 8, "h": 4 },
+      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "auto",
+        "unit": "currencyUSD"
+      },
+      "fieldConfig": {
+        "defaults": { "unit": "currencyUSD" }
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(claude_code_cost_usage_USD_total{user_email=~\"$user\"}[1h])) * 3600",
+          "legendFormat": "コストレート (USD/時間)"
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "title": "トークンレート（直近1時間）",
+      "type": "stat",
+      "gridPos": { "x": 16, "y": 0, "w": 8, "h": 4 },
+      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(claude_code_token_usage_tokens_total{user_email=~\"$user\"}[1h])) * 3600",
+          "legendFormat": "トークンレート (トークン/時間)"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "モデル別コストレート (USD/時間)",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 4, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "custom": { "lineWidth": 2 }
+        }
+      },
+      "options": { "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "expr": "sum by (model) (rate(claude_code_cost_usage_USD_total{user_email=~\"$user\"}[20m])) * 3600",
+          "legendFormat": "{{model}}"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "タイプ別トークンレート (トークン/時間)",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 4, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "options": { "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "expr": "sum by (type) (rate(claude_code_token_usage_tokens_total{user_email=~\"$user\"}[20m])) * 3600",
+          "legendFormat": "{{type}}"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "コストレート推移 (USD/時間)",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 12, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "custom": { "lineWidth": 2 }
+        }
+      },
+      "options": { "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "expr": "sum(rate(claude_code_cost_usage_USD_total{user_email=~\"$user\"}[20m])) * 3600",
+          "legendFormat": "コストレート"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "トークンレート推移 (トークン/時間)",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 12, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "options": { "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "expr": "sum by (type) (rate(claude_code_token_usage_tokens_total{user_email=~\"$user\"}[20m])) * 3600",
+          "legendFormat": "{{type}}"
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "title": "ユーザー別コストレート (USD/時間)",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 20, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "custom": { "lineWidth": 2 }
+        }
+      },
+      "options": { "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "expr": "sum by (user_email) (rate(claude_code_cost_usage_USD_total{user_email=~\"$user\"}[20m])) * 3600",
+          "legendFormat": "{{user_email}}"
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "title": "ユーザー別トークンレート (トークン/時間)",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 20, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "options": { "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "expr": "sum by (user_email) (rate(claude_code_token_usage_tokens_total{user_email=~\"$user\"}[20m])) * 3600",
+          "legendFormat": "{{user_email}}"
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "title": "アクティブユーザー分析",
+      "type": "row",
+      "gridPos": { "x": 0, "y": 28, "w": 24, "h": 1 },
+      "collapsed": false
+    },
+    {
+      "id": 35,
+      "title": "アクティブユーザー Top 5（トークンレート順・直近1時間）",
+      "type": "table",
+      "gridPos": { "x": 0, "y": 29, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "fieldConfig": {
+        "defaults": { "unit": "short" },
+        "overrides": []
+      },
+      "options": { "sortBy": [] },
+      "targets": [
+        {
+          "expr": "topk(5, sum by (user_email) (rate(claude_code_token_usage_tokens_total{user_email=~\"$user\"}[1h])) * 3600)",
+          "legendFormat": "{{user_email}}",
+          "instant": true,
+          "format": "table",
+          "range": false
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": { "Time": true, "__name__": true },
+            "renameByName": {
+              "user_email": "ユーザー",
+              "Value": "トークンレート (トークン/時間)",
+              "Value #A": "トークンレート (トークン/時間)"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": [
+              { "desc": true, "displayName": "トークンレート (トークン/時間)" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "title": "アクティブユーザー Top 5（コストレート順・直近1時間）",
+      "type": "table",
+      "gridPos": { "x": 12, "y": 29, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "fieldConfig": {
+        "defaults": { "unit": "currencyUSD" },
+        "overrides": []
+      },
+      "options": { "sortBy": [] },
+      "targets": [
+        {
+          "expr": "topk(5, sum by (user_email) (rate(claude_code_cost_usage_USD_total{user_email=~\"$user\"}[1h])) * 3600)",
+          "legendFormat": "{{user_email}}",
+          "instant": true,
+          "format": "table",
+          "range": false
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": { "Time": true, "__name__": true },
+            "renameByName": {
+              "user_email": "ユーザー",
+              "Value": "コストレート (USD/時間)",
+              "Value #A": "コストレート (USD/時間)"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": [
+              { "desc": true, "displayName": "コストレート (USD/時間)" }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
