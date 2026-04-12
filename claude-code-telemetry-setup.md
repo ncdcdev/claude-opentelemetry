@@ -58,7 +58,7 @@ echo -n "claude:<パスワード>" | base64
     "OTEL_EXPORTER_OTLP_ENDPOINT": "<エンドポイントURLをここに>",
     "OTEL_EXPORTER_OTLP_HEADERS": "Authorization=Basic <手順1で生成した文字列>",
     "OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE": "delta",
-    "OTEL_METRIC_EXPORT_INTERVAL": "10000",
+    "OTEL_METRIC_EXPORT_INTERVAL": "240000",
     "OTEL_LOGS_EXPORT_INTERVAL": "5000",
     "OTEL_LOG_TOOL_DETAILS": "1"
   }
@@ -77,7 +77,7 @@ echo -n "claude:<パスワード>" | base64
     "OTEL_EXPORTER_OTLP_ENDPOINT": "https://otel.example.com",
     "OTEL_EXPORTER_OTLP_HEADERS": "Authorization=Basic Y2xhdWRlOnBhc3N3b3Jk",
     "OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE": "delta",
-    "OTEL_METRIC_EXPORT_INTERVAL": "10000",
+    "OTEL_METRIC_EXPORT_INTERVAL": "240000",
     "OTEL_LOGS_EXPORT_INTERVAL": "5000",
     "OTEL_LOG_TOOL_DETAILS": "1"
   }
@@ -99,7 +99,7 @@ echo -n "claude:<パスワード>" | base64
 | `OTEL_LOGS_EXPORTER` | `otlp` | ログを OTLP で送信 |
 | `OTEL_EXPORTER_OTLP_PROTOCOL` | `http/protobuf` | HTTP/protobuf 形式で送信 |
 | `OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE` | `delta` | メトリクスを差分形式で送信（再起動時のグラフ断絶を防ぐ） |
-| `OTEL_METRIC_EXPORT_INTERVAL` | `10000` | メトリクス送信間隔（10秒） |
+| `OTEL_METRIC_EXPORT_INTERVAL` | `240000` | メトリクス送信間隔（240秒）。Grafana Cloud Free Tier の 1 DPM 枠に収めるための設定 |
 | `OTEL_LOGS_EXPORT_INTERVAL` | `5000` | ログ送信間隔（5秒） |
 | `OTEL_LOG_TOOL_DETAILS` | `1` | ツール呼び出しの詳細（ファイルパス、URL等）もログに記録 |
 
