@@ -54,8 +54,16 @@
       "id": 1,
       "title": "過去24時間 コスト合計 (USD)",
       "type": "stat",
-      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
-      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 6,
+        "h": 4
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_METRICS}"
+      },
       "fieldConfig": {
         "defaults": {
           "unit": "currencyUSD",
@@ -63,7 +71,11 @@
         }
       },
       "options": {
-        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
         "colorMode": "value",
         "graphMode": "none",
         "textMode": "auto"
@@ -79,10 +91,22 @@
       "id": 2,
       "title": "過去24時間 トークン消費量",
       "type": "stat",
-      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
-      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "gridPos": {
+        "x": 6,
+        "y": 0,
+        "w": 6,
+        "h": 4
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_METRICS}"
+      },
       "options": {
-        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
         "colorMode": "value",
         "graphMode": "none",
         "textMode": "auto"
@@ -98,10 +122,22 @@
       "id": 3,
       "title": "過去24時間 セッション数",
       "type": "stat",
-      "gridPos": { "x": 12, "y": 0, "w": 6, "h": 4 },
-      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 6,
+        "h": 4
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_METRICS}"
+      },
       "options": {
-        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
         "colorMode": "value",
         "graphMode": "none",
         "textMode": "auto"
@@ -117,10 +153,22 @@
       "id": 4,
       "title": "過去24時間 コード変更行数",
       "type": "stat",
-      "gridPos": { "x": 18, "y": 0, "w": 6, "h": 4 },
-      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "gridPos": {
+        "x": 18,
+        "y": 0,
+        "w": 6,
+        "h": 4
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_METRICS}"
+      },
       "options": {
-        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
         "colorMode": "value",
         "graphMode": "none",
         "textMode": "auto"
@@ -136,15 +184,30 @@
       "id": 7,
       "title": "モデル別コスト内訳 (過去24時間)",
       "type": "piechart",
-      "gridPos": { "x": 0, "y": 4, "w": 8, "h": 8 },
-      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "gridPos": {
+        "x": 0,
+        "y": 4,
+        "w": 8,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_METRICS}"
+      },
       "fieldConfig": {
-        "defaults": { "unit": "currencyUSD" }
+        "defaults": {
+          "unit": "currencyUSD"
+        }
       },
       "options": {
         "pieType": "pie",
-        "tooltip": { "mode": "single" },
-        "legend": { "displayMode": "table", "placement": "right" }
+        "tooltip": {
+          "mode": "single"
+        },
+        "legend": {
+          "displayMode": "table",
+          "placement": "right"
+        }
       },
       "targets": [
         {
@@ -158,12 +221,25 @@
       "id": 8,
       "title": "トークン種別内訳 (過去24時間)",
       "type": "piechart",
-      "gridPos": { "x": 8, "y": 4, "w": 8, "h": 8 },
-      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "gridPos": {
+        "x": 8,
+        "y": 4,
+        "w": 8,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_METRICS}"
+      },
       "options": {
         "pieType": "pie",
-        "tooltip": { "mode": "single" },
-        "legend": { "displayMode": "table", "placement": "right" }
+        "tooltip": {
+          "mode": "single"
+        },
+        "legend": {
+          "displayMode": "table",
+          "placement": "right"
+        }
       },
       "targets": [
         {
@@ -175,22 +251,36 @@
     },
     {
       "id": 40,
-      "title": "ユーザー別トークン Top 10 (過去24時間)",
+      "title": "ユーザー別トークン Top 10 (選択期間)",
       "type": "barchart",
-      "gridPos": { "x": 16, "y": 4, "w": 8, "h": 8 },
-      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "gridPos": {
+        "x": 16,
+        "y": 4,
+        "w": 8,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_METRICS}"
+      },
       "fieldConfig": {
-        "defaults": { "unit": "short" }
+        "defaults": {
+          "unit": "short"
+        }
       },
       "options": {
         "xTickLabelRotation": -45,
         "barWidth": 0.7,
-        "tooltip": { "mode": "single" },
-        "legend": { "displayMode": "hidden" }
+        "tooltip": {
+          "mode": "single"
+        },
+        "legend": {
+          "displayMode": "hidden"
+        }
       },
       "targets": [
         {
-          "expr": "topk(10, sum by (user_email) (increase(claude_code_token_usage_tokens_total{user_email=~\"$user\"}[24h])))",
+          "expr": "topk(10, sum by (user_email) (increase(claude_code_token_usage_tokens_total{user_email=~\"$user\"}[$__range])))",
           "legendFormat": "{{user_email}}",
           "instant": true
         }
@@ -200,18 +290,36 @@
       "id": 50,
       "title": "日別トレンド",
       "type": "row",
-      "gridPos": { "x": 0, "y": 12, "w": 24, "h": 1 },
+      "gridPos": {
+        "x": 0,
+        "y": 12,
+        "w": 24,
+        "h": 1
+      },
       "collapsed": false
     },
     {
       "id": 51,
       "title": "日別トークン消費量 (過去30日)",
       "type": "timeseries",
-      "gridPos": { "x": 0, "y": 13, "w": 12, "h": 8 },
-      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "gridPos": {
+        "x": 0,
+        "y": 13,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_METRICS}"
+      },
       "options": {
-        "tooltip": { "mode": "multi" },
-        "legend": { "displayMode": "list", "placement": "bottom" }
+        "tooltip": {
+          "mode": "multi"
+        },
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
       },
       "fieldConfig": {
         "defaults": {
@@ -235,8 +343,16 @@
       "id": 52,
       "title": "日別コスト推移 (過去30日)",
       "type": "timeseries",
-      "gridPos": { "x": 12, "y": 13, "w": 12, "h": 8 },
-      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "gridPos": {
+        "x": 12,
+        "y": 13,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_METRICS}"
+      },
       "fieldConfig": {
         "defaults": {
           "unit": "currencyUSD",
@@ -249,8 +365,13 @@
         }
       },
       "options": {
-        "tooltip": { "mode": "multi" },
-        "legend": { "displayMode": "list", "placement": "bottom" }
+        "tooltip": {
+          "mode": "multi"
+        },
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
       },
       "targets": [
         {
@@ -264,15 +385,31 @@
       "id": 53,
       "title": "時間帯別使用パターン (過去7日)",
       "type": "timeseries",
-      "gridPos": { "x": 0, "y": 21, "w": 24, "h": 8 },
-      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "gridPos": {
+        "x": 0,
+        "y": 21,
+        "w": 24,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_METRICS}"
+      },
       "options": {
-        "tooltip": { "mode": "multi" },
-        "legend": { "displayMode": "list", "placement": "bottom" }
+        "tooltip": {
+          "mode": "multi"
+        },
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
       },
       "fieldConfig": {
         "defaults": {
-          "custom": { "lineWidth": 2, "fillOpacity": 5 }
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 5
+          }
         }
       },
       "targets": [
@@ -290,23 +427,46 @@
       "id": 60,
       "title": "ユーザー別集計",
       "type": "row",
-      "gridPos": { "x": 0, "y": 29, "w": 24, "h": 1 },
+      "gridPos": {
+        "x": 0,
+        "y": 29,
+        "w": 24,
+        "h": 1
+      },
       "collapsed": false
     },
     {
       "id": 21,
-      "title": "ユーザー別コスト (過去24時間)",
+      "title": "ユーザー別コスト (選択期間)",
       "type": "table",
-      "gridPos": { "x": 0, "y": 30, "w": 12, "h": 8 },
-      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "gridPos": {
+        "x": 0,
+        "y": 30,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_METRICS}"
+      },
       "fieldConfig": {
-        "defaults": { "unit": "currencyUSD", "decimals": 4 },
+        "defaults": {
+          "unit": "currencyUSD",
+          "decimals": 4
+        },
         "overrides": []
       },
-      "options": { "sortBy": [{ "desc": true, "displayName": "コスト (USD)" }] },
+      "options": {
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "コスト (USD)"
+          }
+        ]
+      },
       "targets": [
         {
-          "expr": "sum by (user_email) (increase(claude_code_cost_usage_USD_total{user_email=~\"$user\"}[24h]))",
+          "expr": "sum by (user_email) (increase(claude_code_cost_usage_USD_total{user_email=~\"$user\"}[$__range]))",
           "legendFormat": "{{user_email}}",
           "instant": true,
           "format": "table",
@@ -317,7 +477,10 @@
         {
           "id": "organize",
           "options": {
-            "excludeByName": { "Time": true, "__name__": true },
+            "excludeByName": {
+              "Time": true,
+              "__name__": true
+            },
             "renameByName": {
               "user_email": "ユーザー",
               "Value": "コスト (USD)",
@@ -328,25 +491,42 @@
         {
           "id": "sortBy",
           "options": {
-            "fields": [{ "desc": true, "displayName": "コスト (USD)" }]
+            "fields": [
+              {
+                "desc": true,
+                "displayName": "コスト (USD)"
+              }
+            ]
           }
         }
       ]
     },
     {
       "id": 22,
-      "title": "ユーザー別トークン消費量 (過去24時間)",
+      "title": "ユーザー別トークン消費量 (選択期間)",
       "type": "table",
-      "gridPos": { "x": 12, "y": 30, "w": 12, "h": 8 },
-      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "gridPos": {
+        "x": 12,
+        "y": 30,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_METRICS}"
+      },
       "fieldConfig": {
-        "defaults": { "unit": "short" },
+        "defaults": {
+          "unit": "short"
+        },
         "overrides": []
       },
-      "options": { "sortBy": [] },
+      "options": {
+        "sortBy": []
+      },
       "targets": [
         {
-          "expr": "sum by (user_email) (increase(claude_code_token_usage_tokens_total{user_email=~\"$user\"}[24h]))",
+          "expr": "sum by (user_email) (increase(claude_code_token_usage_tokens_total{user_email=~\"$user\"}[$__range]))",
           "legendFormat": "{{user_email}}",
           "instant": true,
           "format": "table",
@@ -357,7 +537,10 @@
         {
           "id": "organize",
           "options": {
-            "excludeByName": { "Time": true, "__name__": true },
+            "excludeByName": {
+              "Time": true,
+              "__name__": true
+            },
             "renameByName": {
               "user_email": "ユーザー",
               "Value": "トークン消費量",
@@ -368,25 +551,42 @@
         {
           "id": "sortBy",
           "options": {
-            "fields": [{ "desc": true, "displayName": "トークン消費量" }]
+            "fields": [
+              {
+                "desc": true,
+                "displayName": "トークン消費量"
+              }
+            ]
           }
         }
       ]
     },
     {
       "id": 23,
-      "title": "ユーザー別セッション数 (過去24時間)",
+      "title": "ユーザー別セッション数 (選択期間)",
       "type": "table",
-      "gridPos": { "x": 0, "y": 38, "w": 12, "h": 8 },
-      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "gridPos": {
+        "x": 0,
+        "y": 38,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_METRICS}"
+      },
       "fieldConfig": {
-        "defaults": { "unit": "short" },
+        "defaults": {
+          "unit": "short"
+        },
         "overrides": []
       },
-      "options": { "sortBy": [] },
+      "options": {
+        "sortBy": []
+      },
       "targets": [
         {
-          "expr": "sum by (user_email) (increase(claude_code_session_count_total{user_email=~\"$user\"}[24h]))",
+          "expr": "sum by (user_email) (increase(claude_code_session_count_total{user_email=~\"$user\"}[$__range]))",
           "legendFormat": "{{user_email}}",
           "instant": true,
           "format": "table",
@@ -397,7 +597,10 @@
         {
           "id": "organize",
           "options": {
-            "excludeByName": { "Time": true, "__name__": true },
+            "excludeByName": {
+              "Time": true,
+              "__name__": true
+            },
             "renameByName": {
               "user_email": "ユーザー",
               "Value": "セッション数",
@@ -408,25 +611,42 @@
         {
           "id": "sortBy",
           "options": {
-            "fields": [{ "desc": true, "displayName": "セッション数" }]
+            "fields": [
+              {
+                "desc": true,
+                "displayName": "セッション数"
+              }
+            ]
           }
         }
       ]
     },
     {
       "id": 26,
-      "title": "ユーザー別コード変更行数 (過去24時間)",
+      "title": "ユーザー別コード変更行数 (選択期間)",
       "type": "table",
-      "gridPos": { "x": 12, "y": 38, "w": 12, "h": 8 },
-      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "gridPos": {
+        "x": 12,
+        "y": 38,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_METRICS}"
+      },
       "fieldConfig": {
-        "defaults": { "unit": "short" },
+        "defaults": {
+          "unit": "short"
+        },
         "overrides": []
       },
-      "options": { "sortBy": [] },
+      "options": {
+        "sortBy": []
+      },
       "targets": [
         {
-          "expr": "sum by (user_email) (increase(claude_code_lines_of_code_count_total{user_email=~\"$user\"}[24h]))",
+          "expr": "sum by (user_email) (increase(claude_code_lines_of_code_count_total{user_email=~\"$user\"}[$__range]))",
           "legendFormat": "{{user_email}}",
           "instant": true,
           "format": "table",
@@ -437,7 +657,10 @@
         {
           "id": "organize",
           "options": {
-            "excludeByName": { "Time": true, "__name__": true },
+            "excludeByName": {
+              "Time": true,
+              "__name__": true
+            },
             "renameByName": {
               "user_email": "ユーザー",
               "Value": "コード変更行数",
@@ -448,25 +671,42 @@
         {
           "id": "sortBy",
           "options": {
-            "fields": [{ "desc": true, "displayName": "コード変更行数" }]
+            "fields": [
+              {
+                "desc": true,
+                "displayName": "コード変更行数"
+              }
+            ]
           }
         }
       ]
     },
     {
       "id": 27,
-      "title": "ターミナル種別 × ユーザー (過去24時間)",
+      "title": "ターミナル種別 × ユーザー (選択期間)",
       "type": "table",
-      "gridPos": { "x": 0, "y": 46, "w": 24, "h": 8 },
-      "datasource": { "type": "prometheus", "uid": "${DS_METRICS}" },
+      "gridPos": {
+        "x": 0,
+        "y": 46,
+        "w": 24,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_METRICS}"
+      },
       "fieldConfig": {
-        "defaults": { "unit": "short" },
+        "defaults": {
+          "unit": "short"
+        },
         "overrides": []
       },
-      "options": { "sortBy": [] },
+      "options": {
+        "sortBy": []
+      },
       "targets": [
         {
-          "expr": "sum by (user_email, terminal_type) (increase(claude_code_session_count_total{user_email=~\"$user\"}[24h]))",
+          "expr": "sum by (user_email, terminal_type) (increase(claude_code_session_count_total{user_email=~\"$user\"}[$__range]))",
           "legendFormat": "{{user_email}} / {{terminal_type}}",
           "instant": true,
           "format": "table",
@@ -477,7 +717,10 @@
         {
           "id": "organize",
           "options": {
-            "excludeByName": { "Time": true, "__name__": true },
+            "excludeByName": {
+              "Time": true,
+              "__name__": true
+            },
             "renameByName": {
               "user_email": "ユーザー",
               "terminal_type": "ターミナル種別",
@@ -489,7 +732,12 @@
         {
           "id": "sortBy",
           "options": {
-            "fields": [{ "desc": true, "displayName": "セッション数" }]
+            "fields": [
+              {
+                "desc": true,
+                "displayName": "セッション数"
+              }
+            ]
           }
         }
       ]
