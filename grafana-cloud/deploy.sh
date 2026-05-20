@@ -61,7 +61,7 @@ fi
 # ドメインフィルタの設定
 DOMAIN_REGEX=""
 if [[ -n "${GRAFANA_ALLOWED_EMAIL_DOMAIN:-}" ]]; then
-  ESCAPED_DOMAIN=$(printf '%s' "$GRAFANA_ALLOWED_EMAIL_DOMAIN" | sed 's/\./\\./g')
+  ESCAPED_DOMAIN=$(printf '%s' "$GRAFANA_ALLOWED_EMAIL_DOMAIN" | sed 's/\./[.]/g')
   DOMAIN_REGEX=".*@${ESCAPED_DOMAIN}"
   echo "    ドメインフィルタ: $GRAFANA_ALLOWED_EMAIL_DOMAIN のみ表示（デプロイ時固定）"
 fi
