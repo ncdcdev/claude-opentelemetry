@@ -58,6 +58,14 @@ else
   echo "    データソース: $MIMIR_NAME (uid: $MIMIR_UID)"
 fi
 
+# ドメインフィルタの設定
+DOMAIN_REGEX=""
+if [[ -n "${GRAFANA_ALLOWED_EMAIL_DOMAIN:-}" ]]; then
+  ESCAPED_DOMAIN=$(printf '%s' "$GRAFANA_ALLOWED_EMAIL_DOMAIN" | sed 's/\./\\./g')
+  DOMAIN_REGEX=".*@${ESCAPED_DOMAIN}"
+  echo "    ドメインフィルタ: $GRAFANA_ALLOWED_EMAIL_DOMAIN のみ表示（デプロイ時固定）"
+fi
+
 # dashboards ディレクトリ内の全 JSON をデプロイ
 DEPLOYED=0
 FAILED=0
@@ -67,8 +75,25 @@ for DASHBOARD_FILE in "$DASHBOARDS_DIR"/*.json; do
   echo ""
   echo "==> デプロイ中: $DASHBOARD_NAME"
 
+  # ドメインフィルタをクエリに焼き込む（設定時のみ）
+  if [[ -n "$DOMAIN_REGEX" ]]; then
+    DASHBOARD_JSON=$(jq \
+      --arg dr "$DOMAIN_REGEX" \
+      'walk(
+        if type == "string" then
+          gsub("\\{user_email=~\"\\$user\"\\}"; "{user_email=~\"$user\",user_email=~\"" + $dr + "\"}")
+        else . end
+      ) |
+      (.templating.list[] | select(.name == "user") | .allValue) = $dr |
+      (.templating.list[] | select(.name == "user") | .query) |=
+        gsub(", user_email\\)$"; "{user_email=~\"" + $dr + "\"}, user_email)")' \
+      "$DASHBOARD_FILE")
+  else
+    DASHBOARD_JSON=$(cat "$DASHBOARD_FILE")
+  fi
+
   PAYLOAD=$(jq -n \
-    --argjson dashboard "$(cat "$DASHBOARD_FILE")" \
+    --argjson dashboard "$DASHBOARD_JSON" \
     --arg uid "$MIMIR_UID" \
     '{
       dashboard: $dashboard,
